@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# personal-site
 
-## Getting Started
+Personal site and lead magnet downloads for **Lukas Halim** — Azure AI / AI-103 study content and YouTube funnel. Stack: [Next.js](https://nextjs.org) App Router, TypeScript, Tailwind CSS, deployed on [Vercel](https://vercel.com).
 
-First, run the development server:
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables (Vercel)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Purpose |
+|----------|---------|
+| `NEXT_PUBLIC_SITE_URL` | Canonical site URL (e.g. `https://lukashalim.com`). Used for sitemap, metadata, and thank-you URLs shown on pages. |
+| `NEXT_PUBLIC_YOUTUBE_CHANNEL_URL` | Your channel link for CTAs. Defaults to `https://www.youtube.com/@lukashalim` if unset. |
 
-## Learn More
+## GitHub and Vercel
 
-To learn more about Next.js, take a look at the following resources:
+1. Create a repo (or use [github.com/lukashalim/personal-site](https://github.com/lukashalim/personal-site)) and push this project:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   git remote add origin https://github.com/lukashalim/personal-site.git
+   git branch -M main
+   git push -u origin main
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. In Vercel: **Add New Project** → Import the GitHub repo → Framework Preset **Next.js** → set the env vars above → Deploy.
 
-## Deploy on Vercel
+3. After you attach a custom domain, set `NEXT_PUBLIC_SITE_URL` to that domain and redeploy so sitemap and Sendfox redirects stay correct.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Sendfox → thank-you flow
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Add or edit a lead magnet in [`lib/resources.ts`](lib/resources.ts): `slug`, `title`, `downloadPath` (under `public/`), and either `sendfoxHostedFormUrl` or `sendfoxFormHtml`.
+2. In Sendfox, open the form → set **success / thank-you redirect** to:
+
+   `https://YOUR_DOMAIN/thank-you/SLUG`
+
+   Example for the starter resource: `https://YOUR_DOMAIN/thank-you/azure-ai-103-starter`
+
+3. Match `SLUG` to the `slug` field in `lib/resources.ts`.
+
+**Embed note:** React will not execute `<script>` tags from pasted HTML. If Sendfox’s embed does not show, use **Sendfox hosted form URL** in `sendfoxHostedFormUrl` instead of raw embed HTML.
+
+## Adding a new download
+
+1. Place the file in [`public/downloads/`](public/downloads/) (e.g. `public/downloads/my-guide.pdf`).
+2. Append a new object to `leadMagnets` in [`lib/resources.ts`](lib/resources.ts) with `downloadPath: "/downloads/my-guide.pdf"` and a unique `slug`.
+3. Configure Sendfox redirect to `/thank-you/your-slug`.
+4. Optional: set `thankYouYoutubeVideoId` to a YouTube **video** id (not channel id) for an embed on the thank-you page.
+
+## Project map
+
+| Path | Role |
+|------|------|
+| [`app/page.tsx`](app/page.tsx) | Home |
+| [`app/resources/page.tsx`](app/resources/page.tsx) | Downloads index |
+| [`app/r/[slug]/page.tsx`](app/r/[slug]/page.tsx) | Per-resource landing + Sendfox |
+| [`app/thank-you/[slug]/page.tsx`](app/thank-you/[slug]/page.tsx) | Post-signup page + file link |
+| [`lib/resources.ts`](lib/resources.ts) | All lead magnet definitions |
+| [`components/sendfox-embed.tsx`](components/sendfox-embed.tsx) | Sendfox UI (client) |
+
+Thank-you routes are listed in `robots.txt` as `disallow` so they are less likely to be indexed as duplicate thin pages.
