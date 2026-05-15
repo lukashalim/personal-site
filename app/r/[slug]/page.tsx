@@ -73,7 +73,9 @@ export default async function ResourceLandingPage({ params }: PageProps) {
       </p>
       <div className="mt-10">
         <SendfoxEmbed
-          sendfoxFormHtml={resource.sendfoxFormHtml}
+          sendfoxFormAction={resource.sendfoxFormAction}
+          sendfoxRecaptcha={resource.sendfoxRecaptcha}
+          sendfoxSuccessRedirectUrl={resource.sendfoxSuccessRedirectUrl}
           sendfoxHostedFormUrl={resource.sendfoxHostedFormUrl}
         />
       </div>

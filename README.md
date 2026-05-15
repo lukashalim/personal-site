@@ -34,12 +34,12 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Sendfox → after subscribe
 
-1. Add or edit a lead magnet in [`lib/resources.ts`](lib/resources.ts): `slug`, `title`, `downloadPath` (under `public/`), optional `postSignupNote`, and either `sendfoxHostedFormUrl` or `sendfoxFormHtml`.
+1. Add or edit a lead magnet in [`lib/resources.ts`](lib/resources.ts): `slug`, `title`, `downloadPath` (under `public/`), `sendfoxFormAction`, optional `sendfoxSuccessRedirectUrl` (Notion fallback), optional `postSignupNote`, or `sendfoxHostedFormUrl`.
 2. In Sendfox, open the form → set **success / thank-you redirect** to any URL, for example:
    - A **Notion** page with the resource, or
    - A thank-you page on this site: `https://YOUR_DOMAIN/thank-you/SLUG` (match `SLUG` to `slug` in `lib/resources.ts`).
 
-**Embed note:** Put only the `<form>...</form>` markup in `sendfoxFormHtml` (omit Sendfox’s `<script>` tag). The app loads `https://cdn.sendfox.com/js/form.js` with `next/script` so async submit and reCAPTCHA work. If you prefer no embed, use **Sendfox hosted form URL** in `sendfoxHostedFormUrl` instead.
+**Embed note:** The site uses a React form that POSTs to Sendfox with `X-Requested-With` (same as Sendfox’s async embed) and then follows `redirect_url` from the JSON response. Set your Notion URL in Sendfox **and** optionally in `sendfoxSuccessRedirectUrl` as a fallback.
 
 ## Adding a new download
 
