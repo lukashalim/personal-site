@@ -1,6 +1,9 @@
 "use client";
 
+import Script from "next/script";
 import { ExternalLink } from "lucide-react";
+
+const SENDFOX_FORM_JS = "https://cdn.sendfox.com/js/form.js";
 
 interface SendfoxEmbedProps {
   sendfoxFormHtml: string | null;
@@ -10,9 +13,8 @@ interface SendfoxEmbedProps {
 /**
  * Sendfox integration surface.
  *
- * Note: embed snippets that rely on inline `<script>` tags will not execute when
- * injected via React. If your form does not render, use `sendfoxHostedFormUrl`
- * (Sendfox hosted form) instead, or paste a minimal HTML form if Sendfox provides one.
+ * Paste the form markup only (no `<script>` tag) into `sendfoxFormHtml`; we load
+ * `form.js` via `next/script` so `data-async` / reCAPTCHA work.
  */
 export function SendfoxEmbed({
   sendfoxFormHtml,
@@ -22,8 +24,8 @@ export function SendfoxEmbed({
     return (
       <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/40">
         <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
-          Enter your email to get the download link. You’ll be redirected to the
-          thank-you page after subscribing.
+          Enter your email to continue. Sendfox will send you to whatever thank-you /
+          redirect URL you set for that form (this site, Notion, etc.).
         </p>
         <a
           href={sendfoxHostedFormUrl}
@@ -40,11 +42,13 @@ export function SendfoxEmbed({
 
   if (sendfoxFormHtml) {
     return (
-      <div
-        className="sendfox-form-root rounded-xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/40 [&_input]:max-w-full"
-        // Trusted: you paste your own Sendfox HTML in lib/resources.ts
-        dangerouslySetInnerHTML={{ __html: sendfoxFormHtml }}
-      />
+      <>
+        <div
+          className="sendfox-form-root rounded-xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900/40 [&_button]:rounded-lg [&_button]:bg-zinc-900 [&_button]:px-4 [&_button]:py-2 [&_button]:text-white [&_input]:mt-1 [&_input]:w-full [&_input]:max-w-md [&_input]:rounded-md [&_input]:border [&_input]:border-zinc-300 [&_input]:px-3 [&_input]:py-2 dark:[&_input]:border-zinc-600 dark:[&_input]:bg-zinc-950 [&_label]:text-sm [&_label]:font-medium [&_p]:mb-4"
+          dangerouslySetInnerHTML={{ __html: sendfoxFormHtml }}
+        />
+        <Script src={SENDFOX_FORM_JS} strategy="afterInteractive" />
+      </>
     );
   }
 
@@ -56,7 +60,8 @@ export function SendfoxEmbed({
         <code className="rounded bg-amber-100/80 px-1 py-0.5 text-xs dark:bg-amber-900/80">sendfoxFormHtml</code> for this
         resource in{" "}
         <code className="rounded bg-amber-100/80 px-1 py-0.5 text-xs dark:bg-amber-900/80">lib/resources.ts</code>. In
-        Sendfox, set the post-subscribe redirect to your thank-you URL for this slug.
+        Sendfox, set the post-subscribe redirect (Notion, this site’s /thank-you/…, or
+        any URL).
       </p>
     </div>
   );

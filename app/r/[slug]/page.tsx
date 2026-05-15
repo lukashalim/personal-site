@@ -67,8 +67,9 @@ export default async function ResourceLandingPage({ params }: PageProps) {
         >
           YouTube
         </a>
-        ? Grab this resource and you’ll land on a thank-you page with the file after
-        you subscribe in Sendfox.
+        ?{" "}
+        {resource.postSignupNote ??
+          "After you subscribe, Sendfox redirects to the URL you configured there (for example a thank-you page on this site or an external link)."}
       </p>
       <div className="mt-10">
         <SendfoxEmbed

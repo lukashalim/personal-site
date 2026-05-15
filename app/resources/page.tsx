@@ -27,8 +27,8 @@ export default function ResourcesPage() {
       </h1>
       <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
         Files for viewers studying Azure AI alongside the channel. Each resource has
-        its own page with Sendfox signup and a thank-you URL you can paste into
-        Sendfox redirects.
+        its own page with Sendfox signup; after subscribe, Sendfox sends people to the
+        redirect you configure (Notion, a page here, or elsewhere).
       </p>
       <ul className="mt-10 divide-y divide-zinc-200 dark:divide-zinc-800">
         {items.map((r) => (

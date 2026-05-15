@@ -7,7 +7,7 @@ export const siteConfig = {
     "Notes, downloads, and videos while studying Azure AI and the AI-103 exam path. Free resources and a focused YouTube series.",
   youtubeChannelUrl:
     process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_URL ??
-    "https://www.youtube.com/@lukashalim",
+    "https://www.youtube.com/@haliml",
 } as const;
 
 export function getSiteUrl(): string {
