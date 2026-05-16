@@ -8,6 +8,32 @@ export const siteConfig = {
   youtubeChannelUrl:
     process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_URL ??
     "https://www.youtube.com/@haliml",
+  profiles: [
+    {
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/in/lukashalim/",
+    },
+    {
+      label: "GitHub",
+      href: "https://github.com/lukashalim",
+    },
+    {
+      label: "Udemy",
+      href: "https://www.udemy.com/user/lukashalim/",
+    },
+  ],
+  projects: [
+    {
+      label: "Task Tracker",
+      href: "https://taskswithviz-three.vercel.app/",
+      description: "Tasks with Viz",
+    },
+    {
+      label: "Superstore Dashboard",
+      href: "https://superstore-cursor.vercel.app/",
+      description: "Tableau-style analytics demo",
+    },
+  ],
 } as const;
 
 export function getSiteUrl(): string {
